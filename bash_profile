@@ -45,8 +45,8 @@ python sqlmap.py -u $1
 }
 
 knock(){
-cd /tools/knock*
-python knock.py -w list.txt $1
+cd /home/tools/knock/knockpy
+python knockpy.py -w list.txt $1
 }
 
 ncx(){
