@@ -18,7 +18,8 @@ curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' 
 } #h/t Michiel Prins
 
 crtsh(){
-curl -s https://crt.sh/?q=%.$1  | sed 's/<\/\?[^>]\+>//g' | grep $1
+bash -c "curl -s 'https://crt.sh/?q=%.$1&output=json' | jq -r '.[].name_value' |sed 's/\*\.//g' |sort -u"
+#curl -s https://crt.sh/?q=%.$1  | sed 's/<\/\?[^>]\+>//g'|sed 's/ //g'| grep $1
 }
 
 certnmap(){
