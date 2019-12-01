@@ -8,6 +8,11 @@ s3cp(){
 aws s3 cp $2 s3://$1 
 }
 
+#---- Content discovery ----
+thewadl(){ #this grabs endpoints from a application.wadl and puts them in yahooapi.txt
+curl -s $1 | grep path | sed -n "s/.*resource path=\"\(.*\)\".*/\1/p" | tee -a ~/tools/dirsearch/db/yahooapi.txt
+}
+
 #----- recon -----
 crtndstry(){
 ./tools/crtndstry/crtndstry $1
