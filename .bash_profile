@@ -64,3 +64,8 @@ nc -l -n -vv -p $1 -k
 crtshdirsearch(){ #gets all domains from crtsh, runs httprobe and then dir bruteforcers
 curl -s https://crt.sh/?q\=%.$1\&output\=json | jq -r '.[].name_value' | sed 's/\*\.//g' | sort -u | httprobe -c 50 | grep https | xargs -n1 -I{} python3 ~/tools/dirsearch/dirsearch.py -u {} -e $2 -t 50 -b 
 }
+
+#---Shodan org filter----
+shd-org(){
+shodan search "org:$1" --fields ip_str,port,org,hostnames
+}
