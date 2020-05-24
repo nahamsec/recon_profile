@@ -19,8 +19,7 @@ crtndstry(){
 }
 
 am(){ #runs amass passively and saves to json
-amass enum --passive -d $1 -json $1.json
-jq .name $1.json | sed "s/\"//g"| httprobe -c 60 | tee -a $1-domains.txt
+amass enum --passive -d $1 | httprobe -c 60 | tee -a $1-domains.txt 
 }
 
 certprobe(){ #runs httprobe on all the hosts from certspotter
