@@ -24,7 +24,7 @@ jq .name $1.json | sed "s/\"//g"| httprobe -c 60 | tee -a $1-domains.txt
 }
 
 certprobe(){ #runs httprobe on all the hosts from certspotter
-curl -s https://crt.sh/\?q\=\%.$1\&output\=json | jq -r '.[].name_value' | sed 's/\*\.//g' | sort -u | httprobe | tee -a ./all.txt
+curl -s https://crt.sh/\?q\=hackerone.com\&output\=json | jq -r '.[].name_value' | sed 's/\*\.//g;s/\\n/\n/g' | sort -u | httprobe | tee -a ./all.txt
 }
 
 mscan(){ #runs masscan
@@ -36,7 +36,27 @@ curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' 
 } #h/t Michiel Prins
 
 crtsh(){
-curl -s https://crt.sh/?Identity=%.$1 | grep ">*.$1" | sed 's/<[/]*[TB][DR]>/\n/g' | grep -vE "<|^[\*]*[\.]*$1" | sort -u | awk 'NF'
+curl -s https://crt.sh/\?q\=$1\&output\=json | jq -r '.[].name_value' | sed 's/\*\.//g;s/\\n/\n/g' | sort -u
+}
+
+alienvault(){
+curl -s https://otx.alienvault.com/api/v1/indicators/domain/$1/passive_dns | jq -r '.passive_dns|.[].hostname' | sort -u
+}
+
+bufferover.run(){
+curl -s https://dns.bufferover.run/dns\?q\=.$1 | jq -r '.FDNS_A|.[]' | cut -d',' -f2 | sort -u
+}
+
+hackertarget(){
+curl -s http://api.hackertarget.com/hostsearch/\?q\=$1 | cut -d',' -f1
+}
+
+rapiddns(){
+curl -s https://rapiddns.io/subdomain/$1\?full\=1 | awk -F'">' '/'$1'/{print $2}' | cut -d'<' -f1 | awk 'NF'
+}
+
+threatcrowd() {
+curl -s https://www.threatcrowd.org/searchApi/v2/domain/report/\?domain\=$1 | jq -r '.subdomains|.[]'
 }
 
 certnmap(){
