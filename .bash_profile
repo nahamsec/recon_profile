@@ -1,3 +1,5 @@
+source ~/.profile
+
 #----- AWS -------
 
 s3ls(){
