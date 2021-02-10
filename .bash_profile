@@ -32,7 +32,7 @@ sudo masscan -p4443,2075,2076,6443,3868,3366,8443,8080,9443,9091,3000,8000,5900,
 }
 
 certspotter(){ 
-curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $1
+curl -s https://api.certspotter.com/v1/issuances\?domain\=$1\&match_wildcards\=true\&include_subdomains\=true\&expand\=dns_names | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $1
 } #h/t Michiel Prins
 
 crtsh(){
